@@ -112,18 +112,23 @@ def store (knights, production, traps, kskill, vskill):
 def battle(knights, Round, kskill, vskill, traps):
     kattack = 0
     vattack = 0
+
     vikings = random.randint(0, round(0.1 * knights * Round))
-    print("A horde of",vikings,"vikings approach, and your,",knights,"knights rush to the defense...")
+
+    print("A horde of", vikings, "vikings approach, and your,", knights, "knights rush to the defense...")
+    
     time.sleep(delay)
+
     print("  ▐   "*knights +"(>|"*vikings)
     print("  ▐   "*knights +"  |"*vikings)
     print("«=╬=» "*knights +"  |"*vikings)
-    print("  ⌡   "*knights +"  !"*vikings)
-    if traps == True:
-        vikings = vikings-10
+    print("  ⌡   " * knights + "  !" * vikings)
+    
+    if traps:
+        vikings = vikings-random.randint(0, 10)
     while vikings > 0 and knights > 0:
         time.sleep(.5 * delay)
-        kattack = random.randint(0,kskill)
+        kattack = random.randint(0,kskill * round(knights / (vikings + 1)))
         vattack = random.randint(0,vskill)
         if vattack > kattack:
             knights = knights-1
