@@ -4,7 +4,7 @@ import random
 import sys
 
 def getDelay(args):
-    return 0.25 if "-f" in args else 1
+    return 0.25 if "-f" in args or "--fast" in args else 1
 
 delay = getDelay(sys.argv)
 
@@ -112,7 +112,7 @@ def store (knights, production, traps, kskill, vskill):
 def battle(knights, Round, kskill, vskill, traps):
     kattack = 0
     vattack = 0
-    vikings = round(Round*0.6)
+    vikings = random.randint(0, round(0.1 * knights * Round))
     print("A horde of",vikings,"vikings approach, and your,",knights,"knights rush to the defense...")
     time.sleep(delay)
     print("  ▐   "*knights +"(>|"*vikings)
