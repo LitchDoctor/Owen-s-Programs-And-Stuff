@@ -1,6 +1,13 @@
 import time
 import datetime
 import random
+import sys
+
+def getDelay(args):
+    return 0.25 if "-f" in args else 1
+
+delay = getDelay(sys.argv)
+
 def StringIt(s):
     str1 = ""
     for ele in s:
@@ -31,9 +38,9 @@ def store (knights, production, traps, kskill, vskill):
     while choice != "":
         if choice != "none" and choice != "a" and choice != "b" and choice != "c" and choice != "d":
             print("                      INVALID INPUT")
-            time.sleep(1)
+            time.sleep(delay)
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        time.sleep(1)
+        time.sleep(delay)
         print("    Item        cost        effect")
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
         if production == 1:
@@ -47,22 +54,22 @@ def store (knights, production, traps, kskill, vskill):
         if production == 1 or kskill == 6 or traps == False or vskill == 6:
             print("To purchase an item, input the letter on the left. To exit the\n"
               "shop, enter nothing. If you enter anything else, the shop will reload.")
-            time.sleep(2)
+            time.sleep(2 * delay)
             print("_____________________________________________________________")
             choice = input("You have "+str(knights)+" knights to spend, what do you want to purchase?\n: ")
         else:
             print("You have purchased everything in the shop proceeding to battle")
             print("_____________________________________________________________")
-            time.sleep(2)
+            time.sleep(2 * delay)
             return (knights, production, traps, kskill, vskill)
         if choice == "a":
             if knights > 5 and production == 1:
                 knights = knights-5
                 production = 2
-                time.sleep(1)
+                time.sleep(delay)
                 print("You have successfully purchased a barracks.")
                 print("___________________________________________")
-                time.sleep(1)
+                time.sleep(delay)
                 print("You now have", str(knights), "knights remaining.")
             elif knights < 6:
                 print("Purchasing the Armory would reduce your knights below 1 ending your empire.")
@@ -70,10 +77,10 @@ def store (knights, production, traps, kskill, vskill):
             if knights > 15 and kskill == 6:
                 knights = knights-15
                 kskill = 7
-                time.sleep(1)
+                time.sleep(delay)
                 print("You have successfully purchased a weaponry.")
                 print("__________________________________________")
-                time.sleep(1)
+                time.sleep(delay)
                 print("You now have", str(knights), "knights remaining.")
             elif knights < 16:
                 print("Purchasing the Weaponry would reduce your knights below 1 ending your empire.")
@@ -81,10 +88,10 @@ def store (knights, production, traps, kskill, vskill):
             if knights > 25 and traps == False:
                 knights = knights-25
                 traps = True
-                time.sleep(1)
+                time.sleep(delay)
                 print("You have successfully purchased a trap center.")
                 print("______________________________________________")
-                time.sleep(1)
+                time.sleep(delay)
                 print("You now have", str(knights), "knights remaining.")
             elif knights < 26:
                 print("Purchasing the Trap Factory would reduce your knights below 1 ending your empire.")
@@ -92,10 +99,10 @@ def store (knights, production, traps, kskill, vskill):
             if knights > 30 and vskill == 6:
                 knights = knights-30
                 vskill = 5
-                time.sleep(1)
+                time.sleep(delay)
                 print("You have successfully purchased a ra mirror.")
                 print("____________________________________________")
-                time.sleep(1)
+                time.sleep(delay)
                 print("You now have", str(knights), "knights remaining.")
             elif knights < 31:
                 print("Purchasing the Ra Mirror would reduce your knights below 1 ending your empire.")
@@ -107,7 +114,7 @@ def battle(knights, Round, kskill, vskill, traps):
     vattack = 0
     vikings = round(Round*0.6)
     print("A horde of",vikings,"vikings approach, and your,",knights,"knights rush to the defense...")
-    time.sleep(1)
+    time.sleep(delay)
     print("  ▐   "*knights +"(>|"*vikings)
     print("  ▐   "*knights +"  |"*vikings)
     print("«=╬=» "*knights +"  |"*vikings)
@@ -115,7 +122,7 @@ def battle(knights, Round, kskill, vskill, traps):
     if traps == True:
         vikings = vikings-10
     while vikings > 0 and knights > 0:
-        time.sleep(.5)
+        time.sleep(.5 * delay)
         kattack = random.randint(0,kskill)
         vattack = random.randint(0,vskill)
         if vattack > kattack:
