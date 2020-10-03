@@ -47,16 +47,21 @@ class ShopOption:
 
     def getShopString(self):
         if self.purchases < self.possiblePurchases:
-            return self.name + " (x" + str(self.possiblePurchases) + ")"
+            return self.name + " (x" + str(self.possiblePurchases - self.purchases) + ")"
         elif self.upgrades < self.possibleUpgrades:
-            return self.name + " Upgrade (x" + str(self.possibleUpgrades) + ")"
+            return self.name + " Upgrade (x" + str(self.possibleUpgrades - self.upgrades) + ")"
         elif self.possibleUpgrades > 0:
             return "No more upgrades! (" + self.name + ")"
         else:
             return "No more purchases! (" + self.name + ")"
 
-    def canPurchase(self):
-        return self.purchases < self.possiblePurchases and self.upgrades < self.possibleUpgrades
+    def canPurchase(self, knights):
+        if self.purchases < self.possiblePurchases:
+            return knights > self.purchaseCost
+        elif self.upgrades < self.possibleUpgrades:
+            return knights > self.upgradeCost
+        
+        return False
 
     def getProduction(self):
         return -1

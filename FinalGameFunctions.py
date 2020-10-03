@@ -99,7 +99,7 @@ def store (knights, production, traps, kskill, vskill):
 
         purchasedOption = shopOptions[choice]
 
-        if knights > purchasedOption.getCost():
+        if purchasedOption.canPurchase(knights):
             knights -= purchasedOption.getCost()
             purchasedOption.purchase()
 
@@ -115,8 +115,8 @@ def store (knights, production, traps, kskill, vskill):
             if purchasedOption.getSubtractedSkill() != -1:
                 vskill -= purchasedOption.getSubtractedSkill()
         else:
-            print("Purchasing the", purchasedOption.getName(), "would reduce your knights below 1, ending your empire.")
-            break
+            print("You cannot purchase the", purchasedOption.getName() + ".")
+            pass
         
         purchaseString = "You have successfully purchased a " + purchasedOption.getName()
         
