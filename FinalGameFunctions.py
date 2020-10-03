@@ -3,6 +3,17 @@ import datetime
 import random
 import sys
 
+from ShopOptions import *
+
+barracks = Barracks()
+weaponry = Weaponry()
+trapFactory = TrapFactory()
+raMirror = RaMirror()
+
+shopOptions = [barracks, weaponry, trapFactory, raMirror]
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
 def getDelay(args):
     return 0.25 if "-f" in args or "--fast" in args else 1
 
@@ -36,76 +47,79 @@ def store (knights, production, traps, kskill, vskill):
     choice = "none"
     print("                    Welcome to the store.")
     while choice != "":
-        if choice != "none" and choice != "a" and choice != "b" and choice != "c" and choice != "d":
-            print("                      INVALID INPUT")
-            time.sleep(delay)
+        # Table columns
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
         time.sleep(delay)
         print("    Item        cost        effect")
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        if production == 1:
-            print("(a):Barracks      5         knight production = 2")
-        if kskill == 6:
-            print("(b):Weaponry      15        Improves knight effectiveness")
-        if traps == False:
-            print("(c):Trap Center   25        kills 10 vikings each round")
-        if vskill == 6:
-            print("(d):Ra Mirror     30        Blinds enemy, decreasing strength")
-        if production == 1 or kskill == 6 or traps == False or vskill == 6:
-            print("To purchase an item, input the letter on the left. To exit the\n"
-              "shop, enter nothing. If you enter anything else, the shop will reload.")
-            time.sleep(2 * delay)
-            print("_____________________________________________________________")
-            choice = input("You have "+str(knights)+" knights to spend, what do you want to purchase?\n: ")
+
+        # Display store options
+
+        maxShopStringLength = 0
+        maxCostStringLength = 0
+
+        for shopOption in shopOptions:
+            maxShopStringLength = max([maxShopStringLength, len(shopOption.getShopString()) + 1])
+            maxCostStringLength = max([maxCostStringLength, len(str(shopOption.getCost())) + 1])
+
+        option = 0
+
+        for shopOption in shopOptions:
+            displayString = "(" + alphabet[option] + "):"
+            displayString += shopOption.getShopString()
+            displayString += " " * (maxShopStringLength - len(shopOption.getShopString())) + "| "
+            displayString += str(shopOption.getCost())
+            displayString += " " * (maxCostStringLength - len(str(shopOption.getCost()))) + "| "
+            displayString += shopOption.getDescription()
+
+            option += 1
+
+            print(displayString)
+        
+        # Get user choice
+        print("To purchase an item, input the letter on the left. \nTo exit the shop, enter nothing. If you enter anything else, the shop will reload.")
+        time.sleep(2 * delay)
+        print("_____________________________________________________________")
+        choice = input("You have " + str(knights) + " knights to spend, what do you want to purchase?\n: ")
+        
+        if choice == "":
+            break
+        if choice not in alphabet:
+            print("                      INVALID INPUT")
+            time.sleep(delay)
+            pass
+
+        choice = alphabet.index(choice)
+
+        if choice > len(shopOptions):
+            print("                      NOT AN OPTION")
+            pass
+
+        # Evaluate user choice, buy items
+
+        purchasedOption = shopOptions[choice]
+
+        if knights > purchasedOption.getCost():
+            knights -= purchasedOption.getCost()
+            purchasedOption.purchase()
+
+            if purchasedOption.getProduction() != -1:
+                production = purchasedOption.getProduction()
+            
+            if purchasedOption.getKSkill() != -1:
+                kskill = purchasedOption.getKSkill()
+            
+            if purchasedOption.getVikingsTrapped() != -1:
+                traps = purchasedOption.getVikingsTrapped()
+            
+            if purchasedOption.getSubtractedSkill() != -1:
+                vskill -= purchasedOption.getSubtractedSkill()
         else:
-            print("You have purchased everything in the shop proceeding to battle")
-            print("_____________________________________________________________")
-            time.sleep(2 * delay)
-            return (knights, production, traps, kskill, vskill)
-        if choice == "a":
-            if knights > 5 and production == 1:
-                knights = knights-5
-                production = 2
-                time.sleep(delay)
-                print("You have successfully purchased a barracks.")
-                print("___________________________________________")
-                time.sleep(delay)
-                print("You now have", str(knights), "knights remaining.")
-            elif knights < 6:
-                print("Purchasing the Armory would reduce your knights below 1 ending your empire.")
-        if choice == "b":
-            if knights > 15 and kskill == 6:
-                knights = knights-15
-                kskill = 7
-                time.sleep(delay)
-                print("You have successfully purchased a weaponry.")
-                print("__________________________________________")
-                time.sleep(delay)
-                print("You now have", str(knights), "knights remaining.")
-            elif knights < 16:
-                print("Purchasing the Weaponry would reduce your knights below 1 ending your empire.")
-        if choice == "c":
-            if knights > 25 and traps == False:
-                knights = knights-25
-                traps = True
-                time.sleep(delay)
-                print("You have successfully purchased a trap center.")
-                print("______________________________________________")
-                time.sleep(delay)
-                print("You now have", str(knights), "knights remaining.")
-            elif knights < 26:
-                print("Purchasing the Trap Factory would reduce your knights below 1 ending your empire.")
-        if choice == "d":
-            if knights > 30 and vskill == 6:
-                knights = knights-30
-                vskill = 5
-                time.sleep(delay)
-                print("You have successfully purchased a ra mirror.")
-                print("____________________________________________")
-                time.sleep(delay)
-                print("You now have", str(knights), "knights remaining.")
-            elif knights < 31:
-                print("Purchasing the Ra Mirror would reduce your knights below 1 ending your empire.")
+            print("Purchasing the", purchasedOption.getName(), "would reduce your knights below 1, ending your empire.")
+            break
+        
+        purchaseString = "You have successfully purchased a " + purchasedOption.getName()
+        
     print("                         Leaving shop")
     return(knights,  production,  traps,  kskill,  vskill)
 
@@ -125,15 +139,19 @@ def battle(knights, Round, kskill, vskill, traps):
     print("  ⌡   " * knights + "  !" * vikings)
     
     if traps:
-        vikings = vikings-random.randint(0, 10)
+        vikings = vikings - random.randint(0, 10)
+    
     while vikings > 0 and knights > 0:
         time.sleep(.5 * delay)
-        kattack = random.randint(0,kskill * round(knights / (vikings + 1)))
-        vattack = random.randint(0,vskill)
+        kattack = random.randint(0,kskill)
+        vattack = random.randint(0, vskill)
+        
         if vattack > kattack:
             knights = knights-1
             print("A knight has been slain!")
+        
         if kattack > vattack:
             vikings = vikings -1
             print("A viking has been slain!")
+    
     return(knights)
