@@ -138,20 +138,19 @@ def battle(knights, Round, kskill, vskill, traps):
     print("«=╬=» "*knights +"  |"*vikings)
     print("  ⌡   " * knights + "  !" * vikings)
     
-    if traps:
-        vikings = vikings - random.randint(0, 10)
+    vikings = vikings - random.randint(0, traps)
     
     while vikings > 0 and knights > 0:
         time.sleep(.5 * delay)
-        kattack = random.randint(0,kskill)
+        kattack = random.randint(0, kskill)
         vattack = random.randint(0, vskill)
         
         if vattack > kattack:
-            knights = knights-1
+            knights -= 1
             print("A knight has been slain!")
         
         if kattack > vattack:
-            vikings = vikings -1
+            vikings -= 1
             print("A viking has been slain!")
     
     return(knights)
