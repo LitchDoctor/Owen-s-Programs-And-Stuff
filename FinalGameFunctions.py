@@ -2,6 +2,7 @@ import time
 import datetime
 import random
 import sys
+from os import system, name 
 
 from ShopOptions import *
 
@@ -16,6 +17,13 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 def getDelay(args):
     return 0.25 if "-f" in args or "--fast" in args else 1
+
+def clear(): 
+    if name == 'nt': 
+        _ = system('cls') 
+
+    else: 
+        _ = system('clear') 
 
 delay = getDelay(sys.argv)
 
@@ -45,13 +53,14 @@ def Record(score,PrevRec,path):
         print("You only got to round "+str(score)+" and did not beat the previous record of "+str(PrevRec)+" rounds.")
 def store (knights, production, traps, kskill, vskill):
     choice = "none"
-    print("                    Welcome to the store.")
     while choice != "":
+        print("                    Welcome to the store.")
+        clear()
         # Table columns
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        time.sleep(delay)
         print("    Item        cost        effect")
         print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+        time.sleep(delay)
 
         # Display store options
 
@@ -81,6 +90,7 @@ def store (knights, production, traps, kskill, vskill):
         time.sleep(2 * delay)
         print("_____________________________________________________________")
         choice = input("You have " + str(knights) + " knights to spend, what do you want to purchase?\n: ")
+        clear()
         
         if choice == "":
             break
@@ -93,6 +103,7 @@ def store (knights, production, traps, kskill, vskill):
 
         if choice > len(shopOptions):
             print("                      NOT AN OPTION")
+            time.sleep(delay)
             pass
 
         # Evaluate user choice, buy items
@@ -129,28 +140,44 @@ def battle(knights, Round, kskill, vskill, traps):
 
     vikings = random.randint(0, round(0.1 * knights * Round))
 
+    clear()
+
     print("A horde of", vikings, "vikings approach, and your,", knights, "knights rush to the defense...")
     
     time.sleep(delay)
-
-    print("  ▐   "*knights +"(>|"*vikings)
-    print("  ▐   "*knights +"  |"*vikings)
-    print("«=╬=» "*knights +"  |"*vikings)
-    print("  ⌡   " * knights + "  !" * vikings)
     
     vikings = vikings - random.randint(0, traps)
+    vDead = 0
+    kDead = 0
     
-    while vikings > 0 and knights > 0:
+    while vikings > vDead and knights > kDead:
+        kAlive = knights - kDead
+        vAlive = vikings - vDead
+        print("  ▐   " * kAlive + "(>| " * vAlive)
+        print("  ▐   " * kAlive + "  | " * vAlive)
+        print("«=╬=» " * kAlive + "  | " * vAlive)
+        print("  ⌡   " * kAlive + "  ! " * vAlive)
+        print("\ ▐ / " * kDead + "(>| ")
+        print(" \▐/  " * kDead + " \|/")
+        print("«=X=» " * kDead + "  X ")
+        print(" /⌡\  " * kDead + " /!\\")
+        print("Knights Alive:", knights - kDead)
+        print("Knights Slain:", kDead)
+        print("Vikings Alive:", vikings - vDead)
+        print("Vikings Slain:", vDead)
         time.sleep(.5 * delay)
         kattack = random.randint(0, kskill)
         vattack = random.randint(0, vskill)
         
         if vattack > kattack:
-            knights -= 1
+            kDead += 1
             print("A knight has been slain!")
         
         if kattack > vattack:
-            vikings -= 1
+            vDead += 1
             print("A viking has been slain!")
+        time.sleep(.5 * delay)
+        clear()
     
-    return(knights)
+    return(knights - kDead)
+1

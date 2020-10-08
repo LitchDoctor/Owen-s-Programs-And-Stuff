@@ -54,12 +54,14 @@ while knights > 0:
         print("You now have traps")
     knights = battle(knights,Round,6,6,False)
     if knights > 0:
-        print("You have vanquish this round of vikings with",knights,"knights still alive.\n"
+        print("___________________________________________________________________________\n"
+              "You have vanquish this round of vikings with",knights,"knights still alive.\n"
               "___________________________________________________________________________")
         Round = Round + 1
         knights = knights + production
     vskill = 6 + round(0.1 * Round)
     time.sleep(2 * delay)
-print("All of your knights have been killed and your kingdom has fallen.\n"
+print("_________________________________________________________________\n"
+      "All of your knights have been killed and your kingdom has fallen.\n"
       "_________________________________________________________________")
 Record(Round,PrevRec,path)

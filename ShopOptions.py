@@ -14,16 +14,16 @@ class ShopOption:
         self.possibleUpgrades = possibleUpgrades
 
     def purchase(self):
-        if self.purchases < self.possiblePurchases:
+        if (self.purchases < self.possiblePurchases and self.possiblePurchases != -1) or self.possiblePurchases == -1:
             self.purchases += 1
             return True
-        elif self.upgrades < self.possibleUpgrades:
+        elif (self.upgrades < self.possibleUpgrades and self.possiblePurchases != -1) or self.possibleUpgrades == -1:
             return self.upgrade()
         else:
             return False
     
     def upgrade(self):
-        if self.upgrades < self.possibleUpgrades:
+        if (self.upgrades < self.possibleUpgrades and self.possiblePurchases != -1) or self.possibleUpgrades == -1:
             self.upgrades += 1
             return True
         else:
@@ -46,19 +46,19 @@ class ShopOption:
         return ""
 
     def getShopString(self):
-        if self.purchases < self.possiblePurchases:
-            return self.name + " (x" + str(self.possiblePurchases - self.purchases) + ")"
-        elif self.upgrades < self.possibleUpgrades:
-            return self.name + " Upgrade (x" + str(self.possibleUpgrades - self.upgrades) + ")"
+        if (self.purchases < self.possiblePurchases and self.possiblePurchases != -1) or self.possiblePurchases == -1:
+            return self.name + " (x" + str(self.possiblePurchases - self.purchases if self.possiblePurchases != -1 else "∞") + ")"
+        elif (self.upgrades < self.possibleUpgrades and self.possiblePurchases != -1) or self.possibleUpgrades == -1:
+            return self.name + " Upgrade (x" + str(self.possibleUpgrades - self.upgrades if self.possibleUpgrades != -1 else "∞") + ")"
         elif self.possibleUpgrades > 0:
             return "No more upgrades! (" + self.name + ")"
         else:
             return "No more purchases! (" + self.name + ")"
 
     def canPurchase(self, knights):
-        if self.purchases < self.possiblePurchases:
+        if (self.purchases < self.possiblePurchases and self.possiblePurchases != -1) or self.possiblePurchases == -1:
             return knights > self.purchaseCost
-        elif self.upgrades < self.possibleUpgrades:
+        elif (self.upgrades < self.possibleUpgrades and self.possiblePurchases != -1) or self.possibleUpgrades == -1:
             return knights > self.upgradeCost
         
         return False
@@ -77,7 +77,7 @@ class ShopOption:
 
 class Barracks(ShopOption):
     def __init__(self):
-        ShopOption.__init__(self, "Barracks", "Improves knight production by 2", "Improves knight production by 1", 5, 1, 1, 10)
+        ShopOption.__init__(self, "Barracks", "Improves knight production by 2", "Improves knight production by 1", 5, 1, 1, -1)
 
     def getProduction(self):
         return (self.purchases * 2) + self.upgrades
