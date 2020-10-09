@@ -37,17 +37,18 @@ def Record(score,PrevRec,path):
     if score > PrevRec:
         print("Congratulations, you survived",str(score),"rounds and set a new record. What do you want to be showcased as?")
         NewName = input(":")
-        f = open(path, "w")
-        f.write(str(score) + "\n")
-        f.write(NewName+"\n")
-        x = str(datetime.datetime.now())
-        y = int(x[11:13])
-        if int(y) > 12:
-            y = y - 12
-            x = x[:11] + str(y) + x[13:]
-            f.write(("on "+ x[0:4] + "/" + x[6:7] + "/" + x[9:10]+ " at "+ x[11:16] + "pm."))
-        else:
-            f.write(("on "+ x[0:4] + "/" + x[6:7] + "/" + x[9:10]+ " at "+ x[11:16] + "am."))
+        with open(path, "w") as f:
+            f.write(str(score) + "\n")
+            f.write(NewName+"\n")
+            x = str(datetime.datetime.now())
+            y = int(x[11:13])
+            if int(y) > 12:
+                y = y - 12
+                x = x[:11] + str(y) + x[13:]
+                f.write(("on "+ x[0:4] + "/" + x[6:7] + "/" + x[9:10]+ " at "+ x[11:16] + "pm."))
+            else:
+                f.write(("on " + x[0:4] + "/" + x[6:7] + "/" + x[9:10] + " at " + x[11:16] + "am."))
+            f.close()
 
     else:
         print("You only got to round "+str(score)+" and did not beat the previous record of "+str(PrevRec)+" rounds.")
