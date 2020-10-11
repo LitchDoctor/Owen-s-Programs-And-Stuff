@@ -98,7 +98,7 @@ def store (knights, production, traps, kskill, vskill):
         if choice not in alphabet:
             print("                      INVALID INPUT")
             time.sleep(delay)
-            pass
+            continue
 
         choice = alphabet.index(choice)
 
@@ -181,4 +181,3 @@ def battle(knights, Round, kskill, vskill, traps):
         clear()
     
     return(knights - kDead)
-1
