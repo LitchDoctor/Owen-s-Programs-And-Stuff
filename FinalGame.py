@@ -1,7 +1,7 @@
 from FinalGameFunctions import *
 import time
 import sys
-path = "./FinalGameInfo"
+path = "./FinalGameInfo.ogw"
 
 PrevRec = 0
 PrevName = ""
