@@ -2,6 +2,7 @@ import time
 import datetime
 import random
 import sys
+import re
 from os import system, name 
 
 from ShopOptions import *
@@ -15,6 +16,15 @@ shopOptions = [barracks, weaponry, trapFactory, raMirror]
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
+# Colors
+DARK_GRAY="\033[1;30m"
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+RESET="\033[0m"
+GREEN_BOLD="\033[1;92m"
+RED_BOLD="\033[1;91m"
+YELLOW_BOLD="\033[1;93m"
+
 def getDelay(args):
     return 0.25 if "-f" in args or "--fast" in args else 1
 
@@ -24,6 +34,9 @@ def clear():
 
     else: 
         _ = system('clear') 
+
+def stripANSIColors(s):
+    return re.sub(r'\x1b[^m]*m', '', s)
 
 delay = getDelay(sys.argv)
 
@@ -55,57 +68,71 @@ def Record(score,PrevRec,path):
 def store (knights, production, traps, kskill, vskill):
     choice = "none"
     while choice != "":
-        print("                    Welcome to the store.")
         clear()
         # Table columns
-        print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        print("    Item        cost        effect")
-        print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        time.sleep(delay)
 
         # Display store options
 
         maxShopStringLength = 0
         maxCostStringLength = 0
+        maxDescription = 0
 
         for shopOption in shopOptions:
             maxShopStringLength = max([maxShopStringLength, len(shopOption.getShopString()) + 1])
             maxCostStringLength = max([maxCostStringLength, len(str(shopOption.getCost())) + 1])
+            maxDescription = max([maxDescription, len(shopOption.getDescription()) + 1])
+
+        maxCostStringLength = max(5, maxCostStringLength) # min of 5 so that "cost" title always fits
+
+        displayStrings = []
 
         option = 0
-
         for shopOption in shopOptions:
-            displayString = "(" + alphabet[option] + "):"
+            displayString = "(" + YELLOW_BOLD + alphabet[option] + RESET + "): "
             displayString += shopOption.getShopString()
-            displayString += " " * (maxShopStringLength - len(shopOption.getShopString())) + "| "
-            displayString += str(shopOption.getCost())
-            displayString += " " * (maxCostStringLength - len(str(shopOption.getCost()))) + "| "
+            displayString += " " * (maxShopStringLength - len(shopOption.getShopString())) + DARK_GRAY + "│ " + RESET
+            displayString += (GREEN_BOLD if shopOption.getCost() < knights else RED) + str(shopOption.getCost()) + RESET
+            displayString += " " * (maxCostStringLength - len(str(shopOption.getCost()))) + DARK_GRAY + "│ " + RESET
             displayString += shopOption.getDescription()
-
             option += 1
 
-            print(displayString)
+            displayStrings.append(displayString)
+
+        maxDisplayStringLength = 0
+        for i in displayStrings:
+            maxDisplayStringLength = max(len(stripANSIColors(i)), maxDisplayStringLength)
+
+        table_top = DARK_GRAY + "╭" + ("─" * (maxShopStringLength + 6)) + "┬" + "─" * (maxCostStringLength + 1) + "┬" + "─" * (maxDescription + 1) + "╮" + RESET
+        print(table_top)
+        print(DARK_GRAY + "│" + RESET + " Item" + (" " * (maxShopStringLength + 1)) + DARK_GRAY + "│" + RESET + " Cost" + (" " * (maxCostStringLength - 4)) + DARK_GRAY + "│" + RESET + " Effect" + " " * (maxDescription - 6) + DARK_GRAY + "│" + RESET)
+        print(DARK_GRAY + "├" + ("─" * (maxShopStringLength + 6)) + "┼" + "─" * (maxCostStringLength + 1) + "┼" + "─" * (maxDescription + 1) + "┤" + RESET)
+        
+        for i in range(len(displayStrings)):
+            displayString = displayStrings[i]
+            print(DARK_GRAY + "│ "+ RESET + displayString + (" " * (maxDisplayStringLength - len(stripANSIColors(displayString)))) + DARK_GRAY + " │" + RESET)
+
+        print(DARK_GRAY + "╰" + ("─" * (maxShopStringLength + 6)) + "┴" + "─" * (maxCostStringLength + 1) + "┴" + "─" * (maxDescription + 1) + "╯" + RESET)
         
         # Get user choice
         print("To purchase an item, input the letter on the left. \nTo exit the shop, enter nothing. If you enter anything else, the shop will reload.")
         time.sleep(2 * delay)
-        print("_____________________________________________________________")
+        print(DARK_GRAY + "┄" * len(stripANSIColors(table_top)) + RESET)
         choice = input("You have " + str(knights) + " knights to spend, what do you want to purchase?\n: ")
         clear()
         
         if choice == "":
             break
         if choice not in alphabet:
-            print("                      INVALID INPUT")
-            time.sleep(delay)
+            print("INVALID INPUT")
+            input("Press [Enter] to continue...")
             continue
 
         choice = alphabet.index(choice)
 
         if choice > len(shopOptions):
-            print("                      NOT AN OPTION")
-            time.sleep(delay)
-            pass
+            print("NOT AN OPTION")
+            input("Press [Enter] to continue...")
+            continue
 
         # Evaluate user choice, buy items
 
@@ -154,18 +181,18 @@ def battle(knights, Round, kskill, vskill, traps):
     while vikings > vDead and knights > kDead:
         kAlive = knights - kDead
         vAlive = vikings - vDead
-        print("  ▐   " * kAlive + "(>| " * vAlive)
-        print("  ▐   " * kAlive + "  | " * vAlive)
-        print("«=╬=» " * kAlive + "  | " * vAlive)
-        print("  ⌡   " * kAlive + "  ! " * vAlive)
-        print("\ ▐ / " * kDead + "(>| " * vDead)
-        print(" \▐/  " * kDead + " \|/" * vDead)
-        print("«=X=» " * kDead + "  X " * vDead)
-        print(" /⌡\  " * kDead + " /!\\" * vDead)
+        print(GREEN_BOLD + "  ┃   " * kAlive + RED_BOLD + "(>│ " * vAlive + RESET)
+        print(GREEN_BOLD + "  ┃   " * kAlive + RED_BOLD + "  │ " * vAlive + RESET)
+        print(GREEN_BOLD + "«═╬═» " * kAlive + RED_BOLD + "  │ " * vAlive + RESET)
+        print(GREEN_BOLD + "  ⌡   " * kAlive + RED_BOLD + "  ! " * vAlive + RESET)
+        print(DARK_GRAY + "╲ ┃ ╱ " * kDead + "(>│ " * vDead)
+        print(" ╲┃╱  " * kDead + " ╲│╱" * vDead)
+        print("«=╳=» " * kDead + "  ╳ " * vDead)
+        print(" ╱⌡╲  " * kDead + " ╱!╲" * vDead)
         print("Knights Alive:", knights - kDead)
         print("Knights Slain:", kDead)
         print("Vikings Alive:", vikings - vDead)
-        print("Vikings Slain:", vDead)
+        print("Vikings Slain:", vDead, RESET)
         time.sleep(.5 * delay)
         kattack = random.randint(0, kskill)
         vattack = random.randint(0, vskill)
