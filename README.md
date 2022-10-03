@@ -1,6 +1,7 @@
 # Final Game
 
 ### By Litch Doctor
+![Code Size](https://img.shields.io/github/languages/code-size/LitchDoctor/Owen-s-Programs-And-Stuff)
 
 ---
 
@@ -8,13 +9,13 @@ This is a game in which you are the ruler of a kingdom. You begin with 15 knight
 
 ## Gameplay
 
-You begin the game with 15 knights. There are four purchases available at the beginning of the game: Barracks, Weaponry, Trap Factory and Ra Mirror.  
-If you choose to buy something, you must type the option of what you wish to purchase (a, b, c, d, etc.) when you're prompted to buy something.  
-If you enter an invalid option, the shop will reload and you will be able to purchase something again.  
-To skip a purchase and proceed straight to battle, you can leave the input empty, and just press enter when prompted to buy something.  
-Both knights and vikings have effectiveness levels. These are taken into account when they are in battle. A higher knight effectiveness means your knights will defeat more vikings. The same is true for viking effectiveness.  
-The number of vikings you face in battle is partially dependent on how many knights you currently have, but it also increases over time.  
-The game will continue until all of your knights have been slain.
+- You begin the game with 15 knights. There are four purchases available at the beginning of the game: Barracks, Weaponry, Trap Factory and Ra Mirror.  
+- If you choose to buy something, you must type the option of what you wish to purchase (a, b, c, d, etc.) when you're prompted to buy something.  
+- If you enter an invalid option, the shop will reload and you will be able to purchase something again.  
+- To skip a purchase and proceed straight to battle, you can leave the input empty, and just press enter when prompted to buy something.  
+- Both knights and vikings have effectiveness levels. These are taken into account when they are in battle. A higher knight effectiveness means your knights will defeat more vikings. The same is true for viking effectiveness.  
+- The number of vikings you face in battle is partially dependent on how many knights you currently have, but it also increases over time.  
+- The game will continue until all of your knights have been slain.
 
 ## Purchases and Upgrades
 
