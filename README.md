@@ -1,6 +1,7 @@
 # Final Game
 
 ### By Litch Doctor
+![Code Size](https://img.shields.io/github/languages/code-size/LitchDoctor/Owen-s-Programs-And-Stuff)
 
 ---
 
