@@ -48,7 +48,7 @@ def StringIt(s):
 
 def Record(score,PrevRec,path):
     if score > PrevRec:
-        print("Congratulations, you survived",str(score),"rounds and set a new record. What do you want to be showcased as?")
+        print(GREEN + "Congratulations, you survived",str(score),"rounds and set a new record. What do you want to be showcased as?")
         NewName = input(":")
         with open(path, "w") as f:
             f.write(str(score) + "\n")
@@ -64,7 +64,7 @@ def Record(score,PrevRec,path):
             f.close()
 
     else:
-        print("You only got to round "+str(score)+" and did not beat the previous record of "+str(PrevRec)+" rounds.")
+        print(RED + "You only got to round "+str(score)+" and did not beat the previous record of "+str(PrevRec)+" rounds.")
 def store (knights, production, traps, kskill, vskill):
     choice = "none"
     while choice != "":
